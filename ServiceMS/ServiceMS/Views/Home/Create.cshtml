@@ -1,0 +1,29 @@
+@{
+    ViewBag.Title = "Yeni Servis Kaydı";
+    Layout = "_Layout";
+}
+
+<form action="/Home/Create" method="post">
+    <div>
+        <label>Müşteri İsmi</label><br />
+        <input type="text" name="CustomerName" />
+    </div>
+
+    <div>
+        <label>Müşteri Telefon</label><br />
+        <input type="text" name="CustomerPhone" />
+    </div>
+
+    <div>
+        <label>Cihaz</label><br />
+        <input type="text" name="DeviceName" />
+    </div>
+
+    <div>
+        <label>Açıklama</label><br />
+        <textarea name="IssueDescription"></textarea>
+    </div>
+    
+    <button type="submit">Kaydet</button>
+    <a href="/Home/Index">İptal</a>
+</form> 

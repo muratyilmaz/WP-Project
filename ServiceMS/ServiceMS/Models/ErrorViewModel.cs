@@ -1,4 +1,4 @@
-namespace TechServiceMS.Models;
+namespace ServiceMS.Models;
 
 public class ErrorViewModel
 {
