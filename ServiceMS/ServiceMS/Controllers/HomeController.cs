@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ServiceMS.Data;
-using ServiceMS.Models;
+using ServiceMS.Models.Db;
 
 namespace ServiceMS.Controllers;
 
@@ -26,17 +26,11 @@ public class HomeController : Controller
         model.TrackingCode = Guid.NewGuid().ToString()[..12];
         model.CreatedAt = DateTime.UtcNow;
         model.UpdatedAt = DateTime.UtcNow;
-        model.Status = ServiceStatus.Open;
+        model.Status = 0;
 
         _db.ServiceRequests.Add(model);
         _db.SaveChanges();
         
         return RedirectToAction("Index"); ;
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

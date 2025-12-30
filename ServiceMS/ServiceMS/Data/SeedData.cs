@@ -1,5 +1,5 @@
 using ServiceMS.Helpers;
-using ServiceMS.Models;
+using ServiceMS.Models.Db;
 
 namespace ServiceMS.Data;
 
@@ -10,7 +10,7 @@ public static class SeedData
         if (db.Users.Any(x => x.Role == "Admin"))
             return;
 
-        var admin = new AppUser
+        var admin = new User
         {
             Username = "admin",
             PasswordHash = PasswordHasher.Hash("admin"),
