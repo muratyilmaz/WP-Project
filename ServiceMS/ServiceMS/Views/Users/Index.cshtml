@@ -1,6 +1,36 @@
+@using ServiceMS.Models.Db;
+
+@model List<user>
+
 @{
     ViewBag.Title = "Kullanıcılar";
     Layout = "_Layout";
 }
 
 <h2>@ViewBag.Title</h2>
+
+<p>
+    <a href="/Users/Create">+ Yeni Kullanıcı Oluştur</a>
+</p>
+
+<table>
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Kullanıcı Adı</th>
+        <th>Rol</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.id</td>
+            <td>@user.username</td>
+            <td>@user.role</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+

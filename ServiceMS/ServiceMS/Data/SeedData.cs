@@ -7,18 +7,18 @@ public static class SeedData
 {
     public static void EnsureAdmin(AppDbContext db)
     {
-        if (db.Users.Any(x => x.Role == "Admin"))
+        if (db.users.Any(x => x.role == "Admin"))
             return;
 
-        var admin = new User
+        var admin = new user()
         {
-            Username = "admin",
-            PasswordHash = PasswordHasher.Hash("admin"),
-            Role = "Admin",
-            CreatedAt = DateTime.UtcNow
+            username = "admin",
+            password_hash = PasswordHasher.Hash("admin"),
+            role = "Admin",
+            created_at = DateTime.UtcNow
         };
         
-        db.Users.Add(admin);
+        db.users.Add(admin);
         db.SaveChanges();
     }
 }

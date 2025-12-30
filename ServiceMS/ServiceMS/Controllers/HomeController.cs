@@ -21,14 +21,14 @@ public class HomeController : Controller
     public IActionResult Create()  {  return View(); }
     
     [HttpPost]
-    public IActionResult Create(ServiceRequest model)
+    public IActionResult Create(service_request model)
     {
-        model.TrackingCode = Guid.NewGuid().ToString()[..12];
-        model.CreatedAt = DateTime.UtcNow;
-        model.UpdatedAt = DateTime.UtcNow;
-        model.Status = 0;
+        model.tracking_code = Guid.NewGuid().ToString()[..12];
+        model.created_at = DateTime.UtcNow;
+        model.updated_at = DateTime.UtcNow;
+        model.status = 0;
 
-        _db.ServiceRequests.Add(model);
+        _db.service_requests.Add(model);
         _db.SaveChanges();
         
         return RedirectToAction("Index"); ;

@@ -10,14 +10,26 @@
     <link rel="stylesheet" href="~/ServiceMS.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+@if (User.Identity != null && User.Identity.IsAuthenticated)
+{
+    <div style="display:flex; justify-content:flex-end; align-items:center; margin-bottom:15px;">
+        <span style="margin-right:10px;">
+            Hoşgeldin <b>@User.Identity.Name</b>
+        </span>
+
+        <form action="/Auth/Logout" method="post">
+            <button type="submit">Logout</button>
+        </form>
     </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+}
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

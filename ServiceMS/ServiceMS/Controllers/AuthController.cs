@@ -1,3 +1,6 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceMS.Data;
@@ -19,15 +22,43 @@ public class AuthController(AppDbContext db) : Controller
     public IActionResult Login(string username, string password)
     {
         var hash = PasswordHasher.Hash(password);
-        var user = db.Users
-            .FirstOrDefault(x => x.Username == username && x.PasswordHash == hash);
+        var user = db.users
+            .FirstOrDefault(x => x.username == username && x.password_hash == hash);
 
         if (user == null)
         {
             ViewBag.Error = "Kullanıcı adı veya şifre hatalı";
-            return View("Error");
+            return View();
         }
         
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.id.ToString()),
+            new Claim(ClaimTypes.Name, user.username),
+            new Claim(ClaimTypes.Role, user.role)
+        };
+
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var principal = new ClaimsPrincipal(identity);
+        HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal)
+            .GetAwaiter().GetResult();
+        
+        return user.role == "Admin" 
+            ? RedirectToAction("Index", "Users") 
+            : RedirectToAction("Index", "ServiceRequests");
+    }
+    
+    [HttpPost]
+    public IActionResult Logout()
+    {
+        HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme)
+            .GetAwaiter().GetResult();
+        return RedirectToAction("Login", "Auth");
+    }
+
+    [HttpGet]
+    public IActionResult Denied()
+    {
         return View();
     }
 }

@@ -12,28 +12,32 @@ public partial class AppDbContext : DbContext
     {
     }
 
-    public virtual DbSet<ServiceRequest> ServiceRequests { get; set; }
+    public virtual DbSet<service_request> service_requests { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<user> users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<ServiceRequest>(entity =>
+        modelBuilder.Entity<service_request>(entity =>
         {
-            entity.HasIndex(e => e.TrackingCode, "IX_ServiceRequests_TrackingCode").IsUnique();
+            entity.HasKey(e => e.id).HasName("PK_ServiceRequests");
 
-            entity.Property(e => e.CustomerName).HasMaxLength(120);
-            entity.Property(e => e.CustomerPhone).HasMaxLength(30);
-            entity.Property(e => e.DeviceName).HasMaxLength(120);
-            entity.Property(e => e.TrackingCode).HasMaxLength(12);
+            entity.HasIndex(e => e.tracking_code, "IX_ServiceRequests_TrackingCode").IsUnique();
+
+            entity.Property(e => e.customer_name).HasMaxLength(120);
+            entity.Property(e => e.customer_phone).HasMaxLength(30);
+            entity.Property(e => e.device_name).HasMaxLength(120);
+            entity.Property(e => e.tracking_code).HasMaxLength(12);
         });
 
-        modelBuilder.Entity<User>(entity =>
+        modelBuilder.Entity<user>(entity =>
         {
-            entity.HasIndex(e => e.Username, "IX_Users_Username").IsUnique();
+            entity.HasKey(e => e.id).HasName("PK_Users");
 
-            entity.Property(e => e.Role).HasMaxLength(20);
-            entity.Property(e => e.Username).HasMaxLength(50);
+            entity.HasIndex(e => e.username, "IX_Users_Username").IsUnique();
+
+            entity.Property(e => e.role).HasMaxLength(20);
+            entity.Property(e => e.username).HasMaxLength(50);
         });
 
         OnModelCreatingPartial(modelBuilder);

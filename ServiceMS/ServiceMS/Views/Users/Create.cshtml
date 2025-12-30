@@ -1,0 +1,36 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@{
+    Layout = "_Layout";
+    var error = ViewBag.Error as string;
+}
+
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <div style="color:red">@error</div>
+}
+
+<h2>Yeni Kullanıcı Oluştur</h2>
+
+<form action="/Users/Create" method="post">
+    <div>
+        <label>Kullanıcı Adı</label><br />
+        <input type="text" name="username" />
+    </div>
+
+    <div>
+        <label>Password</label><br />
+        <input type="password" name="password" />
+    </div>
+
+    <div>
+        <label>Role</label><br />
+        <select name="role">
+            <option value="Clerk">Danışma Görevlisi</option>
+            <option value="Technician">Teknisyen</option>
+        </select>
+    </div>
+
+    <br />
+    <button type="submit">Kaydet</button>
+    <a href="/Users">İptal</a>
+</form>
