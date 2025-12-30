@@ -11,6 +11,13 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+// admin rolündeki kullanıcıyı yaratma
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    SeedData.EnsureAdmin(db);
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
