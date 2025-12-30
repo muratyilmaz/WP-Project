@@ -1,6 +1,41 @@
+@using ServiceMS.Helpers
+@model List<ServiceMS.Models.Db.service_request>
+
 @{
-    ViewBag.Title = "Kayıtlar";
     Layout = "_Layout";
 }
 
-<h2>title</h2>
+<p>
+    <a href="/ServiceRequests/Create">+ Yeni Servis Kaydı Oluştur</a>
+</p>
+
+
+<h2>Kayıtlar</h2>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Takip Kodu</th>
+        <th>Müşteri</th>
+        <th>Telefon</th>
+        <th>Cihaz</th>
+        <th>Durum</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var r in Model)
+    {
+        <tr>
+            <td>@r.tracking_code</td>
+            <td>@r.customer_name</td>
+            <td>@r.customer_phone</td>
+            <td>@r.device_name</td>
+            <td>@ServiceStatusHelper.ToText(@r.status)</td>
+            <td>
+                <a href="/ServiceRequests/Details/@r.id">Detay</a>
+                <a href="/ServiceRequests/Edit/@r.id">Duzenle</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

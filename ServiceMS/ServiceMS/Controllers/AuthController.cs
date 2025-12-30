@@ -14,6 +14,18 @@ public class AuthController(AppDbContext db) : Controller
     [HttpGet]
     public IActionResult Login()
     {
+        if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+            return role switch
+            {
+                "Admin" => RedirectToAction("Index", "Users"),
+                "Clerk" => RedirectToAction("Index", "ServiceRequests"),
+                "Technician" => RedirectToAction("Index", "MyJobs"),
+                _ => View()
+            };
+        } 
+        
         return View();
     }
     
@@ -43,9 +55,13 @@ public class AuthController(AppDbContext db) : Controller
         HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal)
             .GetAwaiter().GetResult();
         
-        return user.role == "Admin" 
-            ? RedirectToAction("Index", "Users") 
-            : RedirectToAction("Index", "ServiceRequests");
+        return user.role switch
+        {
+            "Admin" => RedirectToAction("Index", "Users"),
+            "Technician" => RedirectToAction("Index", "MyJobs"),
+            "Clerk" => RedirectToAction("Index", "ServiceRequests"),
+            _ => RedirectToAction("Login", "Auth")
+        };
     }
     
     [HttpPost]

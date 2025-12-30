@@ -1,0 +1,30 @@
+@{
+    Layout = "_Layout";
+}
+
+<h2>Yeni Servis Kaydi Olustur</h2>
+
+<form action="/ServiceRequests/Create" method="post">
+    <div>
+        <label>Musteri Ismi</label><br />
+        <input type="text" name="customer_name" required/>
+    </div>
+    <br />
+    <div>
+        <label>Telefon Numarasi</label><br />
+        <input type="text" name="customer_phone" required/>
+    </div>
+    <br />
+    <div>
+        <label>Cihaz</label><br />
+        <input type="text" name="device_name" required/>
+    </div>
+    <br />
+    <div>
+        <label>Aciklama</label><br />
+        <textarea name="issue_description" rows="4" cols="50" required></textarea>
+    </div>
+    <br />
+    <button type="submit">Kaydet</button>
+    <a href="/ServiceRequests/Index">Iptal</a>
+</form>

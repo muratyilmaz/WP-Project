@@ -14,4 +14,8 @@ public partial class user
     public string role { get; set; } = null!;
 
     public DateTime created_at { get; set; }
+
+    public virtual ICollection<service_request> service_requestassigned_technicians { get; set; } = new List<service_request>();
+
+    public virtual ICollection<service_request> service_requestcreated_by_users { get; set; } = new List<service_request>();
 }

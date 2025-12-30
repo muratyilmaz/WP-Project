@@ -1,0 +1,81 @@
+@using ServiceMS.Helpers
+@model ServiceMS.Models.Db.service_request
+
+@{
+    Layout = "_Layout";
+}
+
+<p>
+    <a href="/ServiceRequests/Index">← Listeye geri don</a>
+</p>
+
+<h2>Kayit Detaylari</h2>
+
+<hr />
+
+<table>
+    <tr>
+        <td><b>Takip Kodu</b></td>
+        <td>@Model.tracking_code</td>
+    </tr>
+
+    <tr>
+        <td><b>Durum</b></td>
+        <td>@ServiceStatusHelper.ToText(Model.status)</td>
+    </tr>
+    
+    @if (Model.assigned_technician_id != null)
+    {
+        <tr>
+            <td><b>Atanan Teknisyen</b></td>
+            <td>
+                @if (Model.assigned_technician != null)
+                {
+                    @Model.assigned_technician.username
+                }
+                else
+                {
+                    @Model.assigned_technician_id
+                }
+            </td>
+        </tr>
+    }
+
+    <tr>
+        <td><b>Musteri isim</b></td>
+        <td>@Model.customer_name</td>
+    </tr>
+
+    <tr>
+        <td><b>Musteri Telefon</b></td>
+        <td>@Model.customer_phone</td>
+    </tr>
+
+    <tr>
+        <td><b>Musteri Cihazi</b></td>
+        <td>@Model.device_name</td>
+    </tr>
+
+    <tr>
+        <td><b>Aciklama</b></td>
+        <td>@Model.issue_description</td>
+    </tr>
+
+    <tr>
+        <td><b>Olusturulma tarihi</b></td>
+        <td>@Model.created_at</td>
+    </tr>
+
+    <tr>
+        <td><b>Son guncellenme</b></td>
+        <td>@Model.updated_at</td>
+    </tr>
+</table>
+
+<br />
+
+<p>
+    <a href="/ServiceRequests/Edit/@Model.id">Duzenle</a>
+</p>
+
+

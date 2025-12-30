@@ -1,0 +1,57 @@
+@using ServiceMS.Models.Db
+@model service_request
+
+@{
+    Layout = "_Layout";
+    var techs = ViewBag.Technicians as List<user>;
+}
+<a href="@Context.Request.Headers["Referer"]">← Geri Don</a>
+<br/>
+<br/>
+<h4 class="mb-3">Kaydi Duzenle</h4>
+
+<form action="/ServiceRequests/Edit" method="post">
+    <input type="hidden" name="id" value="@Model.id"/>
+    <div class="mb-3 mt-3">
+        <label class="form-label">Müşteri İsim</label>
+        <input type="text" class="form-control" name="customer_name" value="@Model.customer_name" placeholder="Musteri ismi" />
+    </div>
+    <div class="mb-3 mt-3">
+        <label class="form-label">Müşteri Telefon</label>
+        <input type="text" class="form-control" name="customer_phone" value="@Model.customer_phone" />
+    </div>
+    <div class="mb-3 mt-3">
+        <label class="form-label">Cihaz</label>
+        <input type="text" class="form-control" name="device_name" value="@Model.device_name" />
+    </div>
+    <div class="mb-3 mt-3">
+        <label for="comment">Açıklama</label>
+        <textarea class="form-control" id="comment" name="issue_description" rows="5">@Model.issue_description</textarea>
+    </div>
+    <div class="mb-3">
+        <label for="status_sel" class="form-label">Durum</label>
+        <select class="form-select" id="status_sel" name="status">
+            <option value="0" selected="@(Model.status == 0)">Acik</option>
+            <option value="1" selected="@(Model.status == 1)">Islemde</option>
+            <option value="2" selected="@(Model.status == 2)">Tamamlandi</option>
+            <option value="3" selected="@(Model.status == 3)">Teslim Edildi</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="sel1" class="form-label">Atanan Teknisyen</label>
+        <select class="form-select" id="sel1" name="assigned_technician_id">
+            <option value="">— Seçilmedi —</option>
+
+            @foreach (var t in techs)
+            {
+                var isSelected = (Model.assigned_technician_id != null && t.id == Model.assigned_technician_id);
+                <option value="@t.id" selected="@(isSelected)">
+                    @t.username
+                </option>
+            }
+        </select>
+        <small class="text-body-secondary">Seçim yapılmaz ise kaldırılır.</small>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>

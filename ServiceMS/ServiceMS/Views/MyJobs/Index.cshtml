@@ -1,6 +1,52 @@
+@using ServiceMS.Helpers
+@model List<ServiceMS.Models.Db.service_request>
+
 @{
-    ViewBag.Title = "İş Listem";
     Layout = "_Layout";
 }
 
-<h2>title</h2>
+<h2>Teknisyen İş Listem</h2>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Takip Kodu</th>
+        <th>Müşteri</th>
+        <th>Cihaz</th>
+        <th>Durum</th>
+        <th>Hızlı Durum Güncelle</th>
+        <th>Detay</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.tracking_code</td>
+            <td>@item.customer_name</td>
+            <td>@item.device_name</td>
+            <td>@ServiceStatusHelper.ToText(item.status)</td>
+
+            <td>
+                <form action="/MyJobs/UpdateStatus" method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="@item.id" />
+                    <input type="hidden" name="returnUrl" value="/MyJobs" />
+
+                    <select class="form-select" name="status">
+                        <option value="0" selected="@(item.status == 0)">Açık</option>
+                        <option value="1" selected="@(item.status == 1)">İşlemde</option>
+                        <option value="2" selected="@(item.status == 2)">Tamamlandı</option>
+                        <option value="3" selected="@(item.status == 3)">Teslim Edildi</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-primary">Güncelle</button>
+                </form>
+            </td>
+
+            <td>
+                <a href="/MyJobs/Details/@item.id">Detay</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
