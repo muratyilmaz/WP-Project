@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServiceMS.Data;
+using ServiceMS.Helpers;
 using ServiceMS.Models.Db;
 
 namespace ServiceMS.Controllers;
@@ -30,7 +31,7 @@ public class ServiceRequestsController(AppDbContext db) : Controller
         if (!long.TryParse(val, out var userId))
             return RedirectToAction("Login", "Auth");
 
-        model.tracking_code = Guid.NewGuid().ToString("N").ToUpperInvariant();
+        model.tracking_code = TrackingCodeGenerator.Generate();
         model.created_at = DateTime.UtcNow;
         model.updated_at = DateTime.UtcNow;
         model.assigned_technician_id = null;

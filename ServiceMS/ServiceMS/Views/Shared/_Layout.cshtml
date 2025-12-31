@@ -6,31 +6,79 @@
     <title>@ViewData["Title"] - Teknik Servis Yönetim Sistemi</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/ServiceMS.styles.css" asp-append-version="true" />
+    @RenderSection("Styles", required:false)
 </head>
 <body>
-@if (User.Identity != null && User.Identity.IsAuthenticated)
-{
-    <div style="display:flex; justify-content:flex-end; align-items:center; margin-bottom:15px;">
-        <span style="margin-right:10px;">
-            Hoşgeldin <b>@User.Identity.Name</b>
-        </span>
+<header class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-semibold" href="/">Teknik Servis Yönetimi</a>
 
-        <form action="/Auth/Logout" method="post">
-            <button type="submit">Logout</button>
-        </form>
+        <div class="d-flex align-items-center ms-auto">
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <span class="me-3 text-muted small">
+                    Hoşgeldin <span class="fw-semibold">@User.Identity.Name</span>
+                </span>
+
+                <form action="/Auth/Logout/" method="post" class="mb-0">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-danger btn-sm">Çıkış Yap</button>
+                </form>
+            }
+            else
+            {
+                <a href="/Auth/Login" class="btn btn-primary btn-sm">Giriş Yap</a>
+            }
+        </div>
     </div>
-}
-<div class="container mt-3">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
+</header>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-12 col-md-3 col-lg-2 d-md-block bg-light border-end min-vh-100 p-0">
+            <div class="p-3">
+                <div class="text-uppercase text-muted small fw-semibold mb-2">Menü</div>
+
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="list-group">
+                            <a href="/Users/Index" class="list-group-item list-group-item-action">Kullanıcılar</a>
+                            <a href="/ServiceRequests/Index" class="list-group-item list-group-item-action">Servis Kayıtları</a>
+                        </div>
+                    }
+                    else if (User.IsInRole("Clerk"))
+                    {
+                        <div class="list-group">
+                            <a href="/ServiceRequests/Index" class="list-group-item list-group-item-action">Servis Kayıtları</a>
+                        </div>
+                    }
+                    else if (User.IsInRole("Technician"))
+                    {
+                        <div class="list-group">
+                            <a href="/MyJobs/Index" class="list-group-item list-group-item-action">İş Listem</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="list-group">
+                            <a href="/ServiceRequests/Index" class="list-group-item list-group-item-action">Servis Kayıtları</a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-muted small">Giriş yapınız.</div>
+                }
+            </div>
+        </nav>
+        <main class="col-12 col-md-9 col-lg-10 px-0">
+            <div class="p-3">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
 </div>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)
-@RenderSection("Styles", required: false)
+@RenderSection("Scripts", required: false)
 </body>
 </html>

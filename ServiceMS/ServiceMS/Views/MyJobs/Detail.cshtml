@@ -1,0 +1,86 @@
+@using ServiceMS.Helpers
+@model ServiceMS.Models.Db.service_request
+
+@{
+    Layout = "_Layout";
+}
+<div class="container py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="/MyJobs/Index" class="btn btn-outline-secondary btn-sm">← Geri Dön</a>
+    <span class="text-muted small">Takip Kodu: <span class="fw-semibold">@Model.tracking_code</span></span>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-header bg-white">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h5 class="mb-0">İş Detayı</h5>
+          <div class="text-muted small">Servis No: #@Model.id</div>
+        </div>
+
+        <span class="badge @ServiceStatusHelper.StatusBadgeClass(Model.status)">
+          @ServiceStatusHelper.ToText(Model.status)
+        </span>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="row g-3">
+
+        <div class="col-12 col-md-6">
+          <div class="p-3 border rounded">
+            <div class="text-muted small">Müşteri İsmi</div>
+            <div class="fw-semibold">@Model.customer_name</div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="p-3 border rounded">
+            <div class="text-muted small">Cihaz</div>
+            <div class="fw-semibold">@Model.device_name</div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="p-3 border rounded">
+            <div class="text-muted small">Telefon</div>
+            <div class="fw-semibold">@Model.customer_phone</div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="p-3 border rounded">
+            <div class="text-muted small">Güncelleme</div>
+
+            <form action="/MyJobs/UpdateStatus" method="post" class="mt-2">
+              <input type="hidden" name="id" value="@Model.id" />
+              <input type="hidden" name="returnUrl" value="/MyJobs/Details/@Model.id" />
+
+              <label class="form-label">Durumu Güncelle</label>
+              <select class="form-select" name="status">
+                <option value="0" selected="@(Model.status == 0)">Açık</option>
+                <option value="1" selected="@(Model.status == 1)">İşlemde</option>
+                <option value="2" selected="@(Model.status == 2)">Tamamlandı</option>
+              </select>
+
+              <button type="submit" class="btn btn-primary btn-sm mt-2">Kaydet</button>
+            </form>
+
+            <div class="text-muted small mt-2">
+              Mevcut: <span class="fw-semibold">@ServiceStatusHelper.ToText(Model.status)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="p-3 border rounded">
+            <div class="text-muted small">Açıklama</div>
+            <div>@Model.issue_description</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

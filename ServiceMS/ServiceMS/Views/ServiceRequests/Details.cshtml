@@ -5,77 +5,100 @@
     Layout = "_Layout";
 }
 
-<p>
-    <a href="/ServiceRequests/Index">← Listeye geri don</a>
-</p>
+<div class="container py-4">
 
-<h2>Kayit Detaylari</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="/ServiceRequests/Index" class="btn btn-outline-secondary btn-sm">← Geri Dön</a>
 
-<hr />
+        <div class="d-flex align-items-center gap-2">
+            <span class="text-muted small">Takip Kodu:</span>
+            <span class="fw-semibold">@Model.tracking_code</span>
+            <span class="badge @ServiceStatusHelper.StatusBadgeClass(Model.status)">@ServiceStatusHelper.ToText(Model.status)</span>
+        </div>
+    </div>
 
-<table>
-    <tr>
-        <td><b>Takip Kodu</b></td>
-        <td>@Model.tracking_code</td>
-    </tr>
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-0">Kayıt Detayları</h5>
+                    <div class="text-muted small">Servis No: #@Model.id</div>
+                </div>
 
-    <tr>
-        <td><b>Durum</b></td>
-        <td>@ServiceStatusHelper.ToText(Model.status)</td>
-    </tr>
-    
-    @if (Model.assigned_technician_id != null)
-    {
-        <tr>
-            <td><b>Atanan Teknisyen</b></td>
-            <td>
-                @if (Model.assigned_technician != null)
-                {
-                    @Model.assigned_technician.username
-                }
-                else
-                {
-                    @Model.assigned_technician_id
-                }
-            </td>
-        </tr>
-    }
+                <a href="/ServiceRequests/Edit/@Model.id" class="btn btn-primary btn-sm">Düzenle</a>
+            </div>
+        </div>
 
-    <tr>
-        <td><b>Musteri isim</b></td>
-        <td>@Model.customer_name</td>
-    </tr>
+        <div class="card-body">
+            <div class="row g-3">
 
-    <tr>
-        <td><b>Musteri Telefon</b></td>
-        <td>@Model.customer_phone</td>
-    </tr>
+                <div class="col-12 col-md-6">
+                    <div class="p-3 border rounded h-100">
+                        <div class="text-muted small">Müşteri</div>
+                        <div class="fw-semibold">@Model.customer_name</div>
+                    </div>
+                </div>
 
-    <tr>
-        <td><b>Musteri Cihazi</b></td>
-        <td>@Model.device_name</td>
-    </tr>
+                <div class="col-12 col-md-6">
+                    <div class="p-3 border rounded h-100">
+                        <div class="text-muted small">Telefon</div>
+                        <div class="fw-semibold">@Model.customer_phone</div>
+                    </div>
+                </div>
 
-    <tr>
-        <td><b>Aciklama</b></td>
-        <td>@Model.issue_description</td>
-    </tr>
+                <div class="col-12 col-md-6">
+                    <div class="p-3 border rounded h-100">
+                        <div class="text-muted small">Cihaz</div>
+                        <div class="fw-semibold">@Model.device_name</div>
+                    </div>
+                </div>
 
-    <tr>
-        <td><b>Olusturulma tarihi</b></td>
-        <td>@Model.created_at</td>
-    </tr>
+                <div class="col-12 col-md-6">
+                    <div class="p-3 border rounded h-100">
+                        <div class="text-muted small">Teknisyen</div>
 
-    <tr>
-        <td><b>Son guncellenme</b></td>
-        <td>@Model.updated_at</td>
-    </tr>
-</table>
+                        @if (Model.assigned_technician_id != null)
+                        {
+                            <div class="fw-semibold">
+                                @if (Model.assigned_technician != null)
+                                {
+                                    @Model.assigned_technician.username
+                                }
+                                else
+                                {
+                                    @Model.assigned_technician_id
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-muted">Atanmadı</div>
+                        }
+                    </div>
+                </div>
 
-<br />
+                <div class="col-12">
+                    <div class="p-3 border rounded">
+                        <div class="text-muted small">Açıklama</div>
+                        <div>@Model.issue_description</div>
+                    </div>
+                </div>
 
-<p>
-    <a href="/ServiceRequests/Edit/@Model.id">Duzenle</a>
-</p>
+                <div class="col-12 col-md-6">
+                    <div class="p-3 border rounded h-100">
+                        <div class="text-muted small">Oluşturulma (UTC)</div>
+                        <div class="fw-semibold">@Model.created_at</div>
+                    </div>
+                </div>
 
+                <div class="col-12 col-md-6">
+                    <div class="p-3 border rounded h-100">
+                        <div class="text-muted small">Son Güncelleme (UTC)</div>
+                        <div class="fw-semibold">@Model.updated_at</div>
+                    </div>
+                </div>
 
+            </div>
+        </div>
+    </div>
+</div>

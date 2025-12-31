@@ -1,45 +1,47 @@
 @{
-    Layout = "_Layout";
+    Layout = "_AuthLayout";
     var error = ViewBag.Error as string;
 }
 
-@section Styles {
-    <link rel="stylesheet" href="/css/sign-in.css" />
-}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
 
-@if (!string.IsNullOrWhiteSpace(error))
-{
-    <div style="color:red">@error</div>
-}
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <div class="fw-semibold">Teknik Servis Yönetimi</div>
+                    </div>
 
-<main class="form-signin w-100 m-auto">
-<h1 class="h3 mb-3 fw-normal">Giriş yap</h1>
+                    <h1 class="h4 mb-3">Giriş Yap</h1>
 
-<form action="/Auth/Login" method="post">
-    <div class="form-floating">
-        <input
-            type="email"
-            class="form-control"
-            id="floatingInput"
-            name="username"
-            placeholder="name@example.com"
-        />
-        <label for="floatingInput">Eposta Adresi</label>
+                    @if (!string.IsNullOrWhiteSpace(error))
+                    {
+                        <div class="alert alert-danger" role="alert">@error</div>
+                    }
+
+                    <form action="/Auth/Login" method="post" class="vstack gap-3">
+                        @Html.AntiForgeryToken()
+
+                        <div>
+                            <label class="form-label">Kullanıcı Adı</label>
+                            <input type="text" class="form-control" name="username" placeholder="Kullanıcı adınız" autocomplete="username" required />
+                        </div>
+
+                        <div>
+                            <label class="form-label">Şifre</label>
+                            <input type="password" class="form-control" name="password" placeholder="Şifreniz" autocomplete="current-password" required />
+                        </div>
+
+                        <button class="btn btn-primary w-100" type="submit">Giriş Yap</button>
+                    </form>
+
+                    <div class="text-muted small mt-3">
+                        Giriş yaptıktan sonra rolünüze göre ilgili sayfaya yönlendirileceksiniz.
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
-    
-    <div class="form-floating">
-        <input
-            type="password"
-            class="form-control"
-            id="floatingPassword"
-            name="password"
-            placeholder="Password"
-        />
-        <label for="floatingPassword">Şifre</label>
-    </div>
-    <button class="btn btn-primary w-100 py-2" type="submit">
-        Giriş Yap
-    </button>
-</form>
-    
-</main>
+</div>

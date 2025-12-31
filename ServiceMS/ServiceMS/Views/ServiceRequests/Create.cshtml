@@ -1,30 +1,77 @@
 @{
     Layout = "_Layout";
+    ViewData["Title"] = "Yeni Servis Kaydı";
 }
 
-<h2>Yeni Servis Kaydi Olustur</h2>
+<div class="container py-4">
 
-<form action="/ServiceRequests/Create" method="post">
-    <div>
-        <label>Musteri Ismi</label><br />
-        <input type="text" name="customer_name" required/>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="/ServiceRequests/Index" class="btn btn-outline-secondary btn-sm">← Geri Dön</a>
+        <span class="badge bg-light text-dark border">Yeni Kayıt</span>
     </div>
-    <br />
-    <div>
-        <label>Telefon Numarasi</label><br />
-        <input type="text" name="customer_phone" required/>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Yeni Servis Kaydı Oluştur</h5>
+            <div class="text-muted small">Müşteri bilgilerini ve cihaz detaylarını girin.</div>
+        </div>
+
+        <div class="card-body">
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger">@ViewBag.Error</div>
+            }
+
+            <form action="/ServiceRequests/Create" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="row g-3">
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Müşteri İsmi</label>
+                        <input type="text"
+                               class="form-control"
+                               name="customer_name"
+                               placeholder="Örn: Ahmet Yılmaz"
+                               required />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Telefon Numarası</label>
+                        <input type="text"
+                               class="form-control"
+                               name="customer_phone"
+                               placeholder="05xx xxx xx xx"
+                               required />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Cihaz</label>
+                        <input type="text"
+                               class="form-control"
+                               name="device_name"
+                               placeholder="Örn: iPhone 13 / Dell Inspiron"
+                               required />
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Açıklama</label>
+                        <textarea class="form-control"
+                                  name="issue_description"
+                                  rows="5"
+                                  placeholder="Arıza / talep detayını yazın..."
+                                  required></textarea>
+                        <div class="form-text">Müşterinin bildirdiği sorunu kısa ve net yazın.</div>
+                    </div>
+
+                    <div class="col-12 d-flex gap-2 justify-content-end pt-2">
+                        <a href="/ServiceRequests" class="btn btn-outline-secondary">İptal</a>
+                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
     </div>
-    <br />
-    <div>
-        <label>Cihaz</label><br />
-        <input type="text" name="device_name" required/>
-    </div>
-    <br />
-    <div>
-        <label>Aciklama</label><br />
-        <textarea name="issue_description" rows="4" cols="50" required></textarea>
-    </div>
-    <br />
-    <button type="submit">Kaydet</button>
-    <a href="/ServiceRequests/Index">Iptal</a>
-</form>
+
+</div>

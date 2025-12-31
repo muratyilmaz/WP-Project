@@ -42,7 +42,7 @@ public class UsersController(AppDbContext db) : Controller
             username = username,
             password_hash = PasswordHasher.Hash(password),
             role = role,
-            created_at = DateTime.Now
+            created_at = DateTime.UtcNow
         };
         
         _db.users.Add(user);

@@ -1,6 +1,171 @@
 @{
-    ViewBag.Title = "Takip";
-    Layout = "_Layout";
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "Servis Takip";
 }
 
-<h2>title</h2>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+
+                    <div class="text-center mb-4">
+                        <div class="fw-semibold">Teknik Servis Yönetimi</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Takip Kodu</label>
+                        <input id="trackingCode"
+                               type="text"
+                               class="form-control"
+                               placeholder="Örn: SR-7K3M-9Q2D-A8PX"
+                               autocomplete="off" />
+                        <div id="codeHelp" class="form-text">Takip kodunuzu girin ve sorgulayın.</div>
+                        <div id="codeError" class="invalid-feedback"></div>
+                    </div>
+
+                    <button id="btnQuery" class="btn btn-primary w-100" type="button" disabled>
+                        Sorgula
+                    </button>
+
+                    <div id="loading" class="text-center text-muted small mt-3 d-none">
+                        <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                        Sorgulanıyor...
+                    </div>
+
+                    <div id="result" class="mt-4 d-none">
+                        <div class="border rounded p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="text-muted small">Durum</div>
+                                    <div id="statusText" class="fw-semibold"></div>
+                                </div>
+                                <span id="statusBadge" class="badge"></span>
+                            </div>
+
+                            <hr />
+
+                            <div class="text-muted small">Cihaz</div>
+                            <div id="deviceName" class="fw-semibold mb-2"></div>
+
+                            <div class="text-muted small">Son Güncelleme (UTC)</div>
+                            <div id="updatedAt" class="fw-semibold"></div>
+                        </div>
+
+                        <button id="btnClear" class="btn btn-outline-secondary w-100 mt-3" type="button">
+                            Yeni Sorgu
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        function normalizeCode(val) {
+            return (val || "").trim().toUpperCase();
+        }
+
+        function setLoading(isLoading) {
+            $("#loading").toggleClass("d-none", !isLoading);
+            $("#btnQuery").prop("disabled", isLoading);
+            $("#trackingCode").prop("disabled", isLoading);
+        }
+
+        function showError(msg) {
+            $("#trackingCode").addClass("is-invalid");
+            $("#codeError").text(msg || "Hata oluştu.");
+        }
+
+        function clearError() {
+            $("#trackingCode").removeClass("is-invalid");
+            $("#codeError").text("");
+        }
+
+        function badgeClassByStatus(status) {
+            switch (status) {
+                case 0: return "bg-danger";
+                case 1: return "bg-warning text-dark";
+                case 2: return "bg-success";
+                case 3: return "bg-secondary";
+                default: return "bg-dark";
+            }
+        }
+
+        function renderResult(data) {
+            $("#statusText").text(data.statusText);
+            $("#statusBadge")
+                .attr("class", "badge " + badgeClassByStatus(data.status))
+                .text(data.statusText);
+
+            $("#deviceName").text(data.deviceName || "-");
+            $("#updatedAt").text(data.updatedAtUtc || "-");
+
+            $("#result").removeClass("d-none");
+        }
+
+        function resetUI() {
+            clearError();
+            $("#result").addClass("d-none");
+            $("#trackingCode").val("").focus();
+            $("#btnQuery").prop("disabled", true);
+        }
+
+        $("#trackingCode").on("input", function () {
+            clearError();
+            const code = normalizeCode($(this).val());
+            $(this).val(code);
+            console.log(code);
+            $("#btnQuery").prop("disabled", code.length < 6);
+        });
+
+        $("#trackingCode").on("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                $("#btnQuery").click();
+            }
+        });
+
+        $("#btnQuery").on("click", function () {
+            clearError();
+
+            const code = normalizeCode($("#trackingCode").val());
+            if (!code) {
+                showError("Takip kodu giriniz.");
+                return;
+            }
+
+            setLoading(true);
+
+            $.ajax({
+                url: "/Track/Query",
+                method: "GET",
+                data: { code: code },
+                success: function (res) {
+                    setLoading(false);
+                    renderResult(res);
+                },
+                error: function (xhr) {
+                    setLoading(false);
+                    let msg = "Bir hata oluştu.";
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        msg = xhr.responseJSON.message;
+                    } else if (xhr.status === 404) {
+                        msg = "Bu takip kodu ile kayıt bulunamadı.";
+                    }
+                    showError(msg);
+                }
+            });
+        });
+
+        $("#btnClear").on("click", function () {
+            resetUI();
+        });
+        resetUI();
+    </script>
+}
