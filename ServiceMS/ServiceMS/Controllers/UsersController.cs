@@ -50,4 +50,17 @@ public class UsersController(AppDbContext db) : Controller
 
         return RedirectToAction("Index");
     }
+
+    [HttpPost]
+    public IActionResult Delete(long id)
+    {
+        var user = _db.users.FirstOrDefault(x => x.id == id);
+        if (user == null)
+            return NotFound();
+
+        _db.users.Remove(user);
+        _db.SaveChanges();
+
+        return RedirectToAction("Index");
+    }
 }

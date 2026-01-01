@@ -14,7 +14,14 @@ public class ServiceRequestsController(AppDbContext db) : Controller
     [HttpGet]
     public IActionResult Index()
     {
-        var list = db.service_requests.OrderBy(d => d.created_at).ToList();
+        var query = db.service_requests.AsQueryable();
+        
+        if (User.IsInRole("Clerk"))
+        {
+            query = query.Where(d => d.status != 3);
+        }
+        
+        var list = query.OrderBy(d => d.created_at).ToList();
         return View(list);
     }
     

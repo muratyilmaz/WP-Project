@@ -16,9 +16,18 @@ public class MyJobsController(AppDbContext db) : Controller
         if (!long.TryParse(userIdStr, out var userId))
             return RedirectToAction("Login", "Auth");
 
-        var list = db.service_requests.Where(x => x.assigned_technician_id == userId)
-            .OrderByDescending(x => x.updated_at)
-            .ToList();
+        var query = db.service_requests.AsQueryable();
+        
+        if (User.IsInRole("Technician"))
+        {
+            query = query.Where(x => x.assigned_technician_id == userId && x.status != 2);
+        }
+        else if (User.IsInRole("Admin"))
+        {
+            query = query.Where(x => x.assigned_technician_id == userId);
+        }
+
+        var list = query.OrderByDescending(x => x.updated_at).ToList();
         return View(list);
     }
 
